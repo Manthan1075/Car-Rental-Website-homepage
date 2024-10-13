@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.quiz-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+#question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#options button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    background-color: #f4f4f4;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#options button:hover {
+    background-color: #ddd;
+}
+
+.start-quiz {
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.result-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin-top: 20px;
+}
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="quiz">
+        <div id="question"></div>
+        <div id="options">
+            <button id="option0"></button>
+            <button id="option1"></button>
+            <button id="option2"></button>
+            <button id="option3"></button>
+        </div>
+    </div>
+    <button class="start-quiz" id="start-btn">Start Quiz</button>
+    <div class="result-container" id="result">
+        <div id="correct-answers">Correct Answers: 0</div>
+        <div id="wrong-answers">Wrong Answers: 0</div>
+    </div>
+    <script>
+const quizContainer = document.getElementById('quiz');
+const questionEl = document.getElementById('question');
+const optionsEl = Array.from(document.getElementsByClassName('option-text'));
+const startBtn = document.getElementById('start-btn');
+const resultContainer = document.getElementById('result');
+const correctAnswersEl = document.getElementById('correct-answers');
+const wrongAnswersEl = document.getElementById('wrong-answers');
+
+let currentQuestionIndex = 0;
+let score = 0;
+let wrongAnswers = 0;
+
+const quizData = [
+    {
+        question: 'What Is The Capital Of India?',
+        options: ['Mumbai', 'newdelhi', 'Delhi', 'Gandhinar'],
+        answer: 'Delhi'
+    },
+    {
+        question: 'What is the largest planet inour solar system?',
+        options: ['Jupiter', 'Saturn', 'Mars', 'Earth'],
+        answer: 'Jupiter'
+    },
+    {
+        question: 'Which of the following is not a programming language?',
+        options: ['Python', 'JavaScript', 'HTML', 'C++'],
+        answer: 'HTML'
+    }
+];
+
+function startQuiz() {
+    startBtn.style.display = 'none';
+    quizContainer.style.display = 'block';
+    nextQuestion();
+}
+
+function nextQuestion() {
+    resetOptions();
+    const currentQuestion = quizData[currentQuestionIndex];
+    questionEl.innerText = currentQuestion.question;
+    optionsEl.forEach((optionEl, index) => {
+        optionEl.innerText = currentQuestion.options[index];
+    });
+}
+
+function resetOptions() {
+    optionsEl.forEach(optionEl => {
+        optionEl.checked = false;
+    });
+}
+
+function checkAnswer() {
+    const currentQuestion = quizData[currentQuestionIndex];
+    const selectedOption = optionsEl.find(optionEl => optionEl.checked);
+    if (selectedOption.innerText === currentQuestion.answer) {
+        score++;
+        correctAnswersEl.innerText = `Correct Answers: ${score}`;
+    } else {
+        wrongAnswers++;
+        wrongAnswersEl.innerText = `Wrong Answers: ${wrongAnswers}`;
+    }
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizData.length) {
+        nextQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    quizContainer.style.display = 'none';
+    resultContainer.style.display = 'block';
+    resultContainer.innerText = `Quiz Completed!
+Correct Answers: ${score}
+Wrong Answers: ${wrongAnswers}`;
+}
+
+startBtn.addEventListener('click', startQuiz);
+optionsEl.forEach(optionEl => {
+    optionEl.addEventListener('click', checkAnswer);
+});
+    </script>
+</body>
+</html>
